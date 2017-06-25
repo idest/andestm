@@ -1,0 +1,9 @@
+__pycache__
+node_modules
+webpack-stats.json
+webpack.config.js
+misc
+static
+matrices/static
+csv
+package-lock.json

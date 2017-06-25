@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load render_bundle from webpack_loader %}
+{% load crispy_forms_tags %}
+
+{% block title %} AndesTM - Matrices {% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'matrices/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'BootstrapFormHelpers/dist/css/bootstrap-formhelpers.min.css' %}" />
+{% endblock %}
+
+{% block content %}
+<form class="form-horizontal" action='' method='post'>
+
+  {% csrf_token %}
+
+  <div class="row">
+    {% crispy TForm TForm.helper %}
+    {% crispy MForm MForm.helper %}
+  </div>
+  <div class="row form-button">
+    <input class="btn btn-primary" name="submit" value="Submit" type="submit" />
+  </div>
+
+</form>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'BootstrapFormHelpers/dist/js/bootstrap-formhelpers.min.js' %}"></script>
+  <script>
+    $(function () {
+
+      $('.help-block').each(function ( index ) {
+        $(this).attr('id', "helptext" + index);
+      });
+      //$('[data-toggle="tooltip"]').tooltip({title: $('.help-block').text()});
+      $('[data-toggle="tooltip"]').each(function( index ) {
+        $(this).tooltip({title: $('#helptext' + index).text()});
+      });
+    });
+  </script>
+{% endblock %}
