@@ -4,16 +4,36 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
+from .compute import compute
+
 from .forms import ThermalInputForm, MechanicalInputForm
+from .models import ThermalInput, MechanicalInput, RheologicModel
+
+import time
 
 def index(request):
     if request.method == 'POST':
         TForm = ThermalInputForm(request.POST)
         MForm = MechanicalInputForm(request.POST)
         if TForm.is_valid() and MForm.is_valid():
-            HttpResponseRedirect(reverse('matrices:success'))
+            """
+            # View the data
+            data = request.POST
+            Tdata = TForm.cleaned_data
+            Mdata = MForm.cleaned_data
+            context = {'data': data, 'Tdata': Tdata, 'Mdata': Mdata}
+            time.sleep(10)
+            return render(request, 'matrices/data.html', context)
+            """
+            Tdata = TForm.cleaned_data
+            Mdata = MForm.cleaned_data
+            compute(Tdata, Mdata)
+            #HttpResponseRedirect(reverse('matrices:success'))
     else:
-        TForm = ThermalInputForm()
-        MForm = MechanicalInputForm()
+        Initial_TI = ThermalInput.objects.get(pk=1)
+        Initial_MI = MechanicalInput.objects.get(pk=1)
+        TForm = ThermalInputForm(instance=Initial_TI)
+        MForm = MechanicalInputForm(instance=Initial_MI)
     context = {'TForm': TForm, 'MForm': MForm}
     return render(request, 'matrices/index.html', context)
+

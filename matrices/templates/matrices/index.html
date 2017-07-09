@@ -6,38 +6,39 @@
 {% block title %} AndesTM - Matrices {% endblock %}
 
 {% block head %}
-  <link rel="stylesheet" href="{% static 'matrices/style.css' %}" />
-  <link rel="stylesheet" href="{% static 'BootstrapFormHelpers/dist/css/bootstrap-formhelpers.min.css' %}" />
 {% endblock %}
 
 {% block content %}
-<form class="form-horizontal" action='' method='post'>
 
-  {% csrf_token %}
-
-  <div class="row">
-    {% crispy TForm TForm.helper %}
-    {% crispy MForm MForm.helper %}
+<div class="spinner">
+  <div class="sk-wave">
+    <div class="sk-rect sk-rect1"></div>
+    <div class="sk-rect sk-rect2"></div>
+    <div class="sk-rect sk-rect3"></div>
+    <div class="sk-rect sk-rect4"></div>
+    <div class="sk-rect sk-rect5"></div>
   </div>
-  <div class="row form-button">
-    <input class="btn btn-primary" name="submit" value="Submit" type="submit" />
-  </div>
+</div>
 
-</form>
+<div class="content">
+  <form class="form-horizontal" action='' method='post'>
+    {% csrf_token %}
+      <div class="row">
+        {% crispy TForm TForm.helper %}
+        {% crispy MForm MForm.helper %}
+      </div>
+      <div class="row form-button">
+        <input class="btn btn-primary" name="submit" value="Generar modelo" type="submit" id="submit">
+      </div>
+  </form>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'BootstrapFormHelpers/dist/js/bootstrap-formhelpers.min.js' %}"></script>
-  <script>
-    $(function () {
-
-      $('.help-block').each(function ( index ) {
-        $(this).attr('id', "helptext" + index);
-      });
-      //$('[data-toggle="tooltip"]').tooltip({title: $('.help-block').text()});
-      $('[data-toggle="tooltip"]').each(function( index ) {
-        $(this).tooltip({title: $('#helptext' + index).text()});
-      });
-    });
+  <script type="text/javascript" src="{% static 'matrices.bundle.js' %}">
   </script>
+  <!--
+  <script src="{% static 'BootstrapFormHelpers/dist/js/bootstrap-formhelpers.min.js' %}"></script>
+  -->
 {% endblock %}

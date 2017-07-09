@@ -25,7 +25,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.42']
 
 
 # Application definition
@@ -126,6 +126,13 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
+# Crispy forms settings
+# http://django-crispy-forms.readthedocs.io/en/latest/
+
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 CRISPY_FAIL_SILENTLY = not DEBUG
+
+# Media files (e.g. uploaded files)
+
+MEDIA_ROOT = 'media/'

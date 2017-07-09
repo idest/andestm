@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<style>
+  table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+  }
+
+  tr:nth-child(even) {
+      background-color: #dddddd;
+  }
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+  <div class="row">
+    <h1> request.POST </h1>
+    <table>
+      <tr>
+        <th>K=f(z)</th>
+        <th>H=f(z)</th>
+        <th>EF=f(lat)</th>
+        <th>EF</th>
+        <th>K(cs)</th>
+        <th>K(ci)</th>
+        <th>K(ml)</th>
+        <th>H(cs)</th>
+        <th>H(ci)</th>
+      </tr>
+      <tr>
+        <td> {{ data.K_z }} </td>
+        <td> {{ data.H_z }} </td>
+        <td> {{ data.EF_lat }} </td>
+        <td> {{ data.EF }} </td>
+        <td> {{ data.K_cs }} </td>
+        <td> {{ data.K_ci }} </td>
+        <td> {{ data.K_ml }} </td>
+        <td> {{ data.H_cs }} </td>
+        <td> {{ data.H_ci }} </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>H(ml)</th>
+        <th>kpa</th>
+        <th>Tp</th>
+        <th>GA</th>
+        <th>V</th>
+        <th>b</th>
+        <th>dip</th>
+        <th>d2</th>
+        <th>D.rad</th>
+      </tr>
+      <tr>
+        <td> {{ data.H_ml }}</td>
+        <td> {{ data.kpa }}  </td>
+        <td> {{ data.T_p }} </td>
+        <td> {{ data.G_a }} </td>
+        <td> {{ data.V }} </td>
+        <td> {{ data.b }} </td>
+        <td> {{ data.dip }} </td>
+        <td> {{ data.D2 }}</td>
+        <td> {{ data.d_rad }} </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Bs(t)</th>
+        <th>Bs(c)</th>
+        <th>e</th>
+        <th>R</th>
+        <th>s max</th>
+        <th>C.S.</th>
+        <th>C.I.</th>
+        <th>M.L.</th>
+      </tr>
+      <tr>
+        <td> {{ data.Bs_t }} </td>
+        <td> {{ data.Bs_c }} </td>
+        <td> {{ data.e }} </td>
+        <td> {{ data.R }} </td>
+        <td> {{ data.mx_s }} </td>
+        <td> {{ data.Cs }} </td>
+        <td> {{ data.Ci }} </td>
+        <td> {{ data.Ml }} </td>
+      </tr>
+    </table>
+  </div>
+  <div class="row">
+    <h1> form.cleaned_data </h1>
+    <table>
+      <tr>
+        <th>K=f(z)</th>
+        <th>H=f(z)</th>
+        <th>EF=f(lat)</th>
+        <th>EF</th>
+        <th>K(cs)</th>
+        <th>K(ci)</th>
+        <th>K(ml)</th>
+        <th>H(cs)</th>
+        <th>H(ci)</th>
+      </tr>
+      <tr>
+        <td> {{ Tdata.K_z }} </td>
+        <td> {{ Tdata.H_z }} </td>
+        <td> {{ Tdata.EF_lat }} </td>
+        <td> {{ Tdata.EF }} </td>
+        <td> {{ Tdata.K_cs }} </td>
+        <td> {{ Tdata.K_ci }} </td>
+        <td> {{ Tdata.K_ml }} </td>
+        <td> {{ Tdata.H_cs }} </td>
+        <td> {{ Tdata.H_ci }} </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>H(ml)</th>
+        <th>kpa</th>
+        <th>Tp</th>
+        <th>GA</th>
+        <th>V</th>
+        <th>b</th>
+        <th>dip</th>
+        <th>d2</th>
+        <th>D.rad</th>
+      </tr>
+      <tr>
+        <td> {{ Tdata.H_ml }}</td>
+        <td> {{ Tdata.kpa }}  </td>
+        <td> {{ Tdata.T_p }} </td>
+        <td> {{ Tdata.G_a }} </td>
+        <td> {{ Tdata.V }} </td>
+        <td> {{ Tdata.b }} </td>
+        <td> {{ Tdata.dip }} </td>
+        <td> {{ Tdata.D2 }}</td>
+        <td> {{ Tdata.d_rad }} </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <th>Bs(t)</th>
+        <th>Bs(c)</th>
+        <th>e</th>
+        <th>R</th>
+        <th>s max</th>
+        <th>C.S.</th>
+        <th>C.I.</th>
+        <th>M.L.</th>
+      </tr>
+      <tr>
+        <td> {{ Mdata.Bs_t }} </td>
+        <td> {{ Mdata.Bs_c }} </td>
+        <td> {{ Mdata.e }} </td>
+        <td> {{ Mdata.R }} </td>
+        <td> {{ Mdata.mx_s }} </td>
+        <td> {{ Mdata.Cs }} </td>
+        <td> {{ Mdata.Ci }} </td>
+        <td> {{ Mdata.Ml }} </td>
+      </tr>
+    </table>
+  </div>
+{% endblock %}

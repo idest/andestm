@@ -1,0 +1,68 @@
+@import '~spinkit/scss/spinners/3-wave.scss';
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+.help-block {
+  display:none;
+}
+
+.labelInfo:hover {
+  color:#0074D9;
+}
+
+.title {
+  text-align: center;
+  padding-bottom: 15px;
+}
+
+@media (min-width: 768px) {
+  .row {
+    display:flex;
+  }
+}
+
+.t-form {
+  padding: 5px 15px 15px 15px;
+  border:1px solid black;
+  border-radius: 10px 0px 0px 0px;
+}
+
+.m-form {
+  padding: 5px 30px 15px 30px;
+  border-top:1px solid black;
+  border-right: 1px solid black;;
+  border-bottom:1px solid black;
+  border-radius: 0px 10px 0px 0px;
+}
+
+.form-button {
+  padding: 5px 0px 5px 0px;
+  display:block;
+  text-align:center;
+  border-right:1px solid black;
+  border-bottom:1px solid black;
+  border-left:1px solid black;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.spinner {
+  display:none;
+}
+
+.sk-wave {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 10000;
+  margin-top: -20px;
+  margin-left: -25px;
+}
