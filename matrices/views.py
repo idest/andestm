@@ -7,7 +7,7 @@ from django.urls import reverse
 from .compute import compute
 
 from .forms import ThermalInputForm, MechanicalInputForm
-from .models import ThermalInput, MechanicalInput, RheologicModel
+from .models import ThermalInput, MechanicalInput
 
 import time
 
