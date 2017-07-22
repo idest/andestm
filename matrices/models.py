@@ -11,7 +11,7 @@ class GeometricModel(models.Model):
     La estructura de las filas es la siguiente:
     LON LAT SLAB-LAB MOHO ICD TOPO
     """
-    file = models.FileField(upload_to='GeometricModel')
+    file = models.FileField(upload_to='data')
 
     def ___str__(self):
         return self.file.name

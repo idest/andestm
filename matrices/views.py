@@ -27,7 +27,9 @@ def index(request):
             """
             Tdata = TForm.cleaned_data
             Mdata = MForm.cleaned_data
-            compute(Tdata, Mdata)
+            num = compute(Tdata, Mdata)
+            context = {'num': num}
+            return render(request, 'matrices/test.html', context)
             #HttpResponseRedirect(reverse('matrices:success'))
     else:
         Initial_TI = ThermalInput.objects.get(pk=1)
