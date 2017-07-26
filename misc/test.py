@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib
-matplotlib.use('TkAgg')
+#matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import math
 
-data = np.loadtxt('/Users/inigo/projects/andestm-web/media/data/Modelo.dat')
+#data = np.loadtxt('/Users/inigo/projects/andestm-web/media/data/Modelo.dat')
+data = np.loadtxt('/home/idest/projects/andestm/media/data/Modelo.dat')
 
 class DataGrid(object):
     def __init__(self, data):
