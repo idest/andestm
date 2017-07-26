@@ -39,13 +39,9 @@ class DataGrid(object):
                                                 self.zaxis)
 
 class LitLayer(object):
-    def __init__(self, data, X, Y):
-        """data consist of 3 columns, x, y, and layer's depth"""
-        self.Z = np.zeros_like(X)
-        for row in data:
-            xidx = np.where(np.isclose(X[0, :], row[0], 1e-5))[0]
-            yidx = np.where(np.isclose(Y[:, 0], row[1], 1e-5))[0]
-            self.Z[yidx, xidx] = row[2]
+    def __init__(self, datacol, grid):
+        """datacol corresponds to a column of data, except columns 0 and 1"""
+        self.Z = datacol.T.reshape(grid.X.shape)
     def delimit(self, idxs):
         rows = np.repeat(np.arange(len(idxs)), idxs)
         cols = np.ones(idxs.sum(), dtype=int)
@@ -54,7 +50,6 @@ class LitLayer(object):
         areas = np.ones((idxs.shape[0], self.Z.shape[1]))
         areas[rows, cols] = 0
         return areas
-
 
 def compute(Tdata, Mdata):
     """ do computations """

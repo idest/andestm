@@ -1,9 +1,10 @@
 var webpack = require('webpack');
-
+var vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.v2.rules;
 module.exports = {
   entry: {
     index: './assets/index',
-    matrices: './assets/matrices'
+    matrices: './assets/matrices',
+    explorer: './assets/explorer'
   },
   output: {
     path: __dirname + '/static',
@@ -35,6 +36,11 @@ module.exports = {
       }, {
         loader: 'sass-loader'//compiles Sass to CSS
       }]
-    }]
+    }, {
+      test: /\.html/,
+      use: {
+        loader: 'html-loader'
+      }
+    }].concat(vtkRules)
   }
 };

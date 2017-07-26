@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.42']
 # Application definition
 
 INSTALLED_APPS = [
+    'explorer.apps.ExplorerConfig',
     'crispy_forms',
     'csvimport.app.CSVImportConf',
     'matrices.apps.MatricesConfig',
