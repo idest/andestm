@@ -53,6 +53,4 @@ iren.SetRenderWindow(renwin)
 iren.Initialize()
 renwin.Render()
 iren.Start()
-raw_input("bla")
-
 

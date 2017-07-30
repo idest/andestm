@@ -5,3 +5,4 @@ static
 matrices/static
 csv
 package-lock.json
+db.sqlite3
