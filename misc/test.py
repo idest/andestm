@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import math
+from pyevtk.hl import imageToVTK
 
 #data = np.loadtxt('/Users/inigo/projects/andestm-web/media/data/Modelo.dat')
 data = np.loadtxt('/home/idest/projects/andestm/media/data/Modelo.dat')
@@ -83,7 +84,6 @@ def plot_matrix(x,y,matrix,colormap):
     #plt.imshow(AREAS, cmap='magma')
     #plt.show()
 
-
 # Crear meshgrid
 GRID = DataGrid(data)
 
@@ -93,12 +93,14 @@ LS_DATA = data[:, 2]
 # Crear matriz con geometria de LABSLAB
 LABSLAB = LitLayer(LS_DATA, GRID)
 
-#M_data = data[:, [0, 1, 3]]
-#moho = LitLayer(M_data, grid.X, grid.Y)
-#ICD_data = data[:, [0, 1, 4]]
-#icd = LitLayer(ICD_data, grid.X, grid.Y)
-#T_data = data[:, [0, 1, 5]]
-#topo = LitLayer(T_data, grid.X, grid.Y)
+M_DATA = data[:, 3]
+MOHO = LitLayer(M_DATA, GRID)
+
+ICD_DATA = data[:, 4]
+ICD = LitLayer(ICD_DATA, GRID)
+
+T_DATA = data[:, 5]
+TOPO = LitLayer(T_DATA, GRID)
 
 # Calcular gradiente de LABSLAB a lo largo de eje x
 G = np.gradient(LABSLAB.Z, axis=1)
@@ -110,9 +112,16 @@ IDXS = np.nanargmin(G[:-1, :], axis=1)
 AREAS = LABSLAB.delimit(IDXS)
 
 # Guardar matrices
-save_matrix(LABSLAB.Z, 'matrix', GRID.xaxis, GRID.yaxis)
-save_matrix(G, 'gradientMatrix')
-save_matrix(IDXS, 'idxMinGradientMatrix')
-save_matrix(AREAS, 'areasMatrix', bool=True)
-save_matrix(data, 'data')
-plot_matrix(GRID.X, GRID.Y, G, cm.viridis_r)
+#save_matrix(LABSLAB.Z, 'matrix', GRID.xaxis, GRID.yaxis)
+#save_matrix(G, 'gradientMatrix')
+#save_matrix(IDXS, 'idxMinGradientMatrix')
+#save_matrix(AREAS, 'areasMatrix', bool=True)
+#save_matrix(data, 'data')
+#plot_matrix(GRID.X, GRID.Y, TOPO.Z, cm.viridis_r)
+
+
+LABSLAB3D = np.dstack([TOPO.Z]*1)
+
+rndm = np.sin(GRID.XX) + np.sin(GRID.YY) + np.sin((GRID.ZZ)/5)
+
+imageToVTK("./block", pointData = {"elevation": rndm})
