@@ -17,6 +17,7 @@ class DataGrid(object):
         """
         self.xystep = 0.2
         self.zstep = 1
+
         # X Axis
         minlon = math.floor(np.nanmin(data[:, 0]))
         maxlon = math.ceil(np.nanmax(data[:, 0]))
@@ -32,15 +33,18 @@ class DataGrid(object):
         # Z Axis
         minz = math.floor(np.nanmin(data[:, 2]))
         maxz = math.ceil(np.nanmax(data[:, 5]))
-        self.zaxis = np.linspace(minz, maxz,
-                                 num=(maxz-minz)/self.zstep+1,
+        print("maxz: ",maxz,"/ minz: ", minz)
+        self.zaxis = np.linspace(maxz, minz,
+                                 num=(abs(minz-maxz))/self.zstep+1,
                                  endpoint=True)
+        print(self.zaxis)
         # 2DGrid (indexed using gird[y,x])
         self.X, self.Y = np.meshgrid(self.xaxis, self.yaxis)
         # 3DGrid (indexed using grid[y,x,z])
         self.XX, self.YY, self.ZZ = np.meshgrid(self.xaxis,
                                                 self.yaxis,
                                                 self.zaxis)
+        print(self.ZZ)
 
 class LitLayer(object):
     def __init__(self, datacol, grid):
@@ -122,6 +126,6 @@ AREAS = LABSLAB.delimit(IDXS)
 
 LABSLAB3D = np.dstack([TOPO.Z]*1)
 
-rndm = np.sin(GRID.XX) + np.sin(GRID.YY) + np.sin((GRID.ZZ)/5)
-
+rndm = np.sin(GRID.XX) + np.sin(GRID.YY) + np.sin((GRID.ZZ)/5)*GRID.ZZ/100
+print(rndm.shape)
 imageToVTK("./block", pointData = {"elevation": rndm})
