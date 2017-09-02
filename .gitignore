@@ -6,3 +6,8 @@ matrices/static
 csv
 package-lock.json
 db.sqlite3
+misc/old_code
+misc/prints
+misc/vtk_files
+misc/modelotermal.pdf
+misc/data
