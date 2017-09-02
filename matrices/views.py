@@ -16,7 +16,6 @@ def index(request):
         TForm = ThermalInputForm(request.POST)
         MForm = MechanicalInputForm(request.POST)
         if TForm.is_valid() and MForm.is_valid():
-            """
             # View the data
             data = request.POST
             Tdata = TForm.cleaned_data
@@ -29,8 +28,10 @@ def index(request):
             Mdata = MForm.cleaned_data
             num = compute(Tdata, Mdata)
             context = {'num': num}
-            return render(request, 'matrices/test.html', context)
+            #return render(request, 'matrices/test.html', context)
+            #return HttpResponseRedirect(reverse('explorer:index'))
             #HttpResponseRedirect(reverse('matrices:success'))
+            """
     else:
         Initial_TI = ThermalInput.objects.get(pk=1)
         Initial_MI = MechanicalInput.objects.get(pk=1)
