@@ -2,7 +2,6 @@ __pycache__
 .DS_Store
 node_modules
 webpack-stats.json
-csv
 package-lock.json
 db.sqlite3
 misc/old_code
