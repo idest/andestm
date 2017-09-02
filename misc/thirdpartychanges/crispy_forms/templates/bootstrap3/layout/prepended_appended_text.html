@@ -20,7 +20,7 @@
                 <div class="input-group">
                     {% if crispy_prepended_text %}<span class="input-group-addon{% if active %} active{% endif %}{% if input_size %} {{ input_size }}{% endif %}">{{ crispy_prepended_text|safe }}</span>{% endif %}
                     {% crispy_field field %}
-                    {% if crispy_appended_text %}<span class="input-group-addon{% if active %} active{% endif %}{% if input_size %} {{ input_size }}{% endif %}">{{ crispy_appended_text|safe }}</span>{% endif %}
+                    {% if crispy_appended_text %}<span class="input-group-addon{% if active %} active{% endif %}{% if input_size %} {{ input_size }}{% endif %}">{% if append_label_suffix %} {{ field.field.label_suffix|safe }} {% else %} {{ crispy_appended_text|safe }} {% endif %}</span>{% endif %}
                 </div>
           {% endif %}
 
