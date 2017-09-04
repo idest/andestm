@@ -103,7 +103,7 @@ class ThermalInput(models.Model):
     delta = models.FloatField("δ",
         help_text="Factor de escala para el decaimiento exponencial de la \
         producción de calor radiogénico (km)")
-    Tp = models.FloatField("Tₚ",
+    Tp = models.FloatField("Tm",
         help_text="Temperatura potencial del manto astenosférico en la \
         superficie (ºC)")
     G = models.FloatField("G",
@@ -126,14 +126,14 @@ class MechanicalInput(models.Model):
     """
     Mechanical parameters defined by the user
     """
-    Bs_t = models.FloatField("Bₛ (t)",
+    Bs_t = models.FloatField("Bs (t)",
         help_text="Constante de tensión de Byerlee (MPa)")
-    Bs_c = models.FloatField("Bₛ (c)",
+    Bs_c = models.FloatField("Bs (c)",
         help_text="Constante de compresión de Byerlee (MPa)")
     e = models.FloatField("ė", help_text="Strain rate (s⁻¹)")
     R = models.FloatField("R",
         help_text="Constante universal de gases (J mol⁻¹ K⁻¹)")
-    s_max = models.FloatField("σₘₐₓ", help_text="Máximo stress disponible (MPa)")
+    s_max = models.FloatField("σ max.", help_text="Máximo stress disponible (MPa)")
     Cs = models.ForeignKey('RheologicModel', on_delete=models.CASCADE,
         related_name='cs', verbose_name="C.S.",
         help_text="Modelo reológico para la corteza superior")

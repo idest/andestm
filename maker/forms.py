@@ -47,7 +47,7 @@ class ThermalInputForm(forms.ModelForm):
                              radiogénico',
                              widget=forms.NumberInput(attrs={'step':'1'}),
                              min_value=0, max_value=5)
-    Tp = forms.FloatField(label='Tₚ',label_suffix='ºC',
+    Tp = forms.FloatField(label='Tm',label_suffix='ºC',
                           help_text='Temperatura potencial del manto \
                           astenosférico en la superficie',
                           widget=forms.NumberInput(attrs={'step':'100'}),
@@ -152,11 +152,11 @@ class MechanicalInputForm(forms.ModelForm):
     """
     Form for mechanical input
     """
-    Bs_t = forms.FloatField(label='Bₛ (t)',label_suffix='MPa',
+    Bs_t = forms.FloatField(label='Bs (t)',label_suffix='MPa',
                           help_text='Constante de tensión de Byerlee',
                           widget=forms.NumberInput(attrs={'step':'5e3'}),
                           min_value=0, max_value=1e5)
-    Bs_c = forms.FloatField(label='Bₛ (c)',label_suffix='MPa',
+    Bs_c = forms.FloatField(label='Bs (c)',label_suffix='MPa',
                           help_text='Constante de compresión de Byerlee',
                           widget=forms.NumberInput(attrs={'step':'5e3'}),
                           min_value=-1e5, max_value=-1e3)
@@ -168,7 +168,7 @@ class MechanicalInputForm(forms.ModelForm):
                           help_text='Constante universal de gases',
                           widget=forms.NumberInput(attrs={'step':'1e-2'}),
                           min_value=1, max_value=10)
-    s_max = forms.FloatField(label='σₘₐₓ',label_suffix='MPa',
+    s_max = forms.FloatField(label='σ max.',label_suffix='MPa',
                              help_text='Máximo stress disponible',
                              widget=forms.NumberInput(attrs={'step':'50'}),
                              min_value=0, max_value=500)
