@@ -2,7 +2,7 @@ var $ = require('jquery');
 
 $(function () {
   //EF disabled behavior
-  var initialsize = $('#id_EF').css('font-size');
+  var initialsize = $('.numberinput').css('font-size');
   function toggle_disabled( event ) {
     $(event.data.elem).prop('readonly', this.checked);
     if (this.checked) {
@@ -12,6 +12,8 @@ $(function () {
     }
     //console.log('toggled');
   }
-  $('#id_EF_lat').click({ elem: '#id_EF' }, toggle_disabled);
-  $('#id_EF_lat').triggerHandler('click');
+  $('#id_t_lat').click({ elem: '#id_t' }, toggle_disabled);
+  $('#id_delta_icd').click({ elem: '#id_delta' }, toggle_disabled);
+  $('#id_t_lat').triggerHandler('click');
+  $('#id_delta_icd').triggerHandler('click');
 });

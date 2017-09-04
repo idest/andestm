@@ -44,11 +44,10 @@ class TrenchAge(models.Model):
     """
     Modelo que caracteriza la edad de la fosa en funcion de su latitud
     """
-    lat = models.FloatField()
-    age = models.FloatField()
+    file = models.FileField(upload_to='data')
 
     def __str__(self):
-        return self.lat
+        return self.file.name
 
 class Limits(models.Model):
     """
@@ -78,55 +77,63 @@ class ThermalInput(models.Model):
     """
     Thermal parameters defined by the user
     """
-    K_z = models.BooleanField("K = f(z)",
-        help_text="¿Usar K en función de la profundidad?")
+    k_z = models.BooleanField("k = f(z)",
+        help_text="¿Usar k en función de la profundidad?")
     H_z = models.BooleanField("H = f(z)",
         help_text="¿Usar H en función de la profundidad?")
-    EF_lat = models.BooleanField("EF = f(lat)",
-        help_text="¿Usar EF en función de la latitud?")
-    EF = models.FloatField("EF",
-        help_text="Edad de la corteza oceánica en la fosa (Ma)")
-    K_cs = models.FloatField("K (cs)",
-        help_text="Conductividad térmica corteza sup. (W/mK)")
-    K_ci = models.FloatField("K (ci)",
-        help_text="Conductividad térmica corteza inf. (W/mK)")
-    K_ml = models.FloatField("K (ml)",
-        help_text="Conductividad térmica manto litosférico (W/mK)")
-    H_cs = models.FloatField("H (cs)",
-        help_text="Calor radiogénico corteza sup. (W/m3)")
-    H_ci = models.FloatField("H (ci)",
-        help_text="Calor radiogénico corteza inf. (W/m3)")
-    H_ml = models.FloatField("H (ml)",
-        help_text="Calor radiogénico manto litosférico (W/m3)")
-    kpa = models.FloatField("kpa",
-        help_text="Difusividad térmica (m2/s)")
-    T_p = models.FloatField("Tp",
-        help_text="Temperatura potencial del manto (C)")
-    G_a = models.FloatField("Ga",
+    delta_icd = models.BooleanField("δ = ICD",
+        help_text="¿Usar δ igual a profundidad de la ICD?")
+    t_lat = models.BooleanField("t = f(lat)",
+        help_text="¿Usar t en función de la latitud?")
+    k_cs = models.FloatField("k (c.s.)",
+        help_text="Conductividad térmica de la corteza superior (W/mK)")
+    k_ci = models.FloatField("k (c.i.)",
+        help_text="Conductividad térmica de la corteza inferior (W/mK)")
+    k_ml = models.FloatField("k (m.l.)",
+        help_text="Conductividad térmica del manto litosférico (W/mK)")
+    H_cs = models.FloatField("H (c.s.)",
+        help_text="Producción de calor radiogénico en la corteza superior \
+        (W/m³)")
+    H_ci = models.FloatField("H (c.i.)",
+        help_text="Producción de calor radiogénico en la corteza inferior \
+        (W/m³)")
+    H_ml = models.FloatField("H (m.l.)",
+        help_text="Producción de calor radiogénico en el manto litosférico \
+        (W/m³)")
+    delta = models.FloatField("δ",
+        help_text="Factor de escala para el decaimiento exponencial de la \
+        producción de calor radiogénico (km)")
+    Tp = models.FloatField("Tₚ",
+        help_text="Temperatura potencial del manto astenosférico en la \
+        superficie (ºC)")
+    G = models.FloatField("G",
         help_text="Gradiente adiabático (K/m)")
+    kappa = models.FloatField("κ",
+        help_text="Difusividad térmica (m²/s)")
     V = models.FloatField("V",
         help_text="Velocidad de convergencia (m/Ma)")
+    dip = models.FloatField("α",
+        help_text="Ángulo de subducción promedio")
     b = models.FloatField("b",
         help_text="Parametro adimensional")
-    dip = models.FloatField("dip",
-        help_text="Ángulo de subduccion")
-    D2 = models.FloatField("D2",
-        help_text="Constante de proporcionalidad adimensional")
-    d_rad = models.FloatField("Drad",
-        help_text="Decaimiento radiogénico (km)")
+    t = models.FloatField("t",
+        help_text="Edad de la corteza oceánica subductada en la fosa (Ma)")
+    D = models.FloatField("D",
+        help_text="Parámetro que regula el decrecimiento exponencial del\
+        stress de cizalle a lo largo del limite entre placas")
 
 class MechanicalInput(models.Model):
     """
     Mechanical parameters defined by the user
     """
-    Bs_t = models.FloatField("Bs (t)",
+    Bs_t = models.FloatField("Bₛ (t)",
         help_text="Constante de tensión de Byerlee (MPa)")
-    Bs_c = models.FloatField("Bs (c)",
+    Bs_c = models.FloatField("Bₛ (c)",
         help_text="Constante de compresión de Byerlee (MPa)")
-    e = models.FloatField("e", help_text="Strain rate (s-1)")
+    e = models.FloatField("ė", help_text="Strain rate (s⁻¹)")
     R = models.FloatField("R",
-        help_text="Constante universal de gases (J mol-1 K-1)")
-    mx_s = models.FloatField("S max.", help_text="Máximo stress disponible (MPa)")
+        help_text="Constante universal de gases (J mol⁻¹ K⁻¹)")
+    s_max = models.FloatField("σₘₐₓ", help_text="Máximo stress disponible (MPa)")
     Cs = models.ForeignKey('RheologicModel', on_delete=models.CASCADE,
         related_name='cs', verbose_name="C.S.",
         help_text="Modelo reológico para la corteza superior")

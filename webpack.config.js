@@ -3,7 +3,7 @@ var vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.v2.rules
 module.exports = {
   entry: {
     index: './assets/index',
-    matrices: './assets/matrices',
+    maker: './assets/maker',
     explorer: './assets/explorer'
   },
   output: {

@@ -11723,7 +11723,7 @@ var $ = __webpack_require__(2);
 
 $(function () {
   //EF disabled behavior
-  var initialsize = $('#id_EF').css('font-size');
+  var initialsize = $('.numberinput').css('font-size');
   function toggle_disabled(event) {
     $(event.data.elem).prop('readonly', this.checked);
     if (this.checked) {
@@ -11733,8 +11733,10 @@ $(function () {
     }
     //console.log('toggled');
   }
-  $('#id_EF_lat').click({ elem: '#id_EF' }, toggle_disabled);
-  $('#id_EF_lat').triggerHandler('click');
+  $('#id_t_lat').click({ elem: '#id_t' }, toggle_disabled);
+  $('#id_delta_icd').click({ elem: '#id_delta' }, toggle_disabled);
+  $('#id_t_lat').triggerHandler('click');
+  $('#id_delta_icd').triggerHandler('click');
 });
 
 /***/ }),
@@ -11755,7 +11757,7 @@ $(function () {
   //Initialize the tooltips for each info icon (data-toggle="tooltip")
   //with the corresponding help_text as their title
   $('[data-toggle="tooltip"]').each(function (index) {
-    $(this).tooltip({ title: $('#helptext' + index).text() });
+    $(this).tooltip({ title: $('#helptext' + index).text(), container: 'body' });
   });
 });
 
