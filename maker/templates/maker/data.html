@@ -28,50 +28,52 @@
     <h1> request.POST </h1>
     <table>
       <tr>
-        <th>K=f(z)</th>
+        <th>k=f(z)</th>
         <th>H=f(z)</th>
-        <th>EF=f(lat)</th>
-        <th>EF</th>
+        <th>delta=ICD</th>
+        <th>t=f(lat)</th>
         <th>K(cs)</th>
         <th>K(ci)</th>
         <th>K(ml)</th>
         <th>H(cs)</th>
         <th>H(ci)</th>
+        <th>H(ml)</th>
       </tr>
       <tr>
-        <td> {{ data.K_z }} </td>
+        <td> {{ data.k_z }} </td>
         <td> {{ data.H_z }} </td>
-        <td> {{ data.EF_lat }} </td>
-        <td> {{ data.EF }} </td>
-        <td> {{ data.K_cs }} </td>
-        <td> {{ data.K_ci }} </td>
-        <td> {{ data.K_ml }} </td>
+        <td> {{ data.delta_icd }} </td>
+        <td> {{ data.t_lat }} </td>
+        <td> {{ data.k_cs }} </td>
+        <td> {{ data.k_ci }} </td>
+        <td> {{ data.k_ml }} </td>
         <td> {{ data.H_cs }} </td>
         <td> {{ data.H_ci }} </td>
+        <td> {{ data.H_ml }}</td>
       </tr>
     </table>
     <table>
       <tr>
-        <th>H(ml)</th>
-        <th>kpa</th>
+        <th>delta</th>
         <th>Tp</th>
-        <th>GA</th>
+        <th>G</th>
+        <th>kpa</th>
         <th>V</th>
-        <th>b</th>
         <th>dip</th>
+        <th>b</th>
+        <th>t</th>
         <th>d2</th>
-        <th>D.rad</th>
       </tr>
       <tr>
-        <td> {{ data.H_ml }}</td>
-        <td> {{ data.kpa }}  </td>
-        <td> {{ data.T_p }} </td>
-        <td> {{ data.G_a }} </td>
+        <td> {{ data.delta }} </td>
+        <td> {{ data.Tp }} </td>
+        <td> {{ data.G }} </td>
+        <td> {{ data.kappa }}  </td>
         <td> {{ data.V }} </td>
-        <td> {{ data.b }} </td>
         <td> {{ data.dip }} </td>
-        <td> {{ data.D2 }}</td>
-        <td> {{ data.d_rad }} </td>
+        <td> {{ data.b }} </td>
+        <td> {{ data.t }} </td>
+        <td> {{ data.D }}</td>
       </tr>
     </table>
     <table>
@@ -90,7 +92,7 @@
         <td> {{ data.Bs_c }} </td>
         <td> {{ data.e }} </td>
         <td> {{ data.R }} </td>
-        <td> {{ data.mx_s }} </td>
+        <td> {{ data.s_max }} </td>
         <td> {{ data.Cs }} </td>
         <td> {{ data.Ci }} </td>
         <td> {{ data.Ml }} </td>
@@ -101,50 +103,52 @@
     <h1> form.cleaned_data </h1>
     <table>
       <tr>
-        <th>K=f(z)</th>
+        <th>k=f(z)</th>
         <th>H=f(z)</th>
-        <th>EF=f(lat)</th>
-        <th>EF</th>
+        <th>delta=ICD</th>
+        <th>t=f(lat)</th>
         <th>K(cs)</th>
         <th>K(ci)</th>
         <th>K(ml)</th>
         <th>H(cs)</th>
         <th>H(ci)</th>
+        <th>H(ml)</th>
       </tr>
       <tr>
-        <td> {{ Tdata.K_z }} </td>
+        <td> {{ Tdata.k_z }} </td>
         <td> {{ Tdata.H_z }} </td>
-        <td> {{ Tdata.EF_lat }} </td>
-        <td> {{ Tdata.EF }} </td>
-        <td> {{ Tdata.K_cs }} </td>
-        <td> {{ Tdata.K_ci }} </td>
-        <td> {{ Tdata.K_ml }} </td>
+        <td> {{ Tdata.delta_icd }} </td>
+        <td> {{ Tdata.t_lat }} </td>
+        <td> {{ Tdata.k_cs }} </td>
+        <td> {{ Tdata.k_ci }} </td>
+        <td> {{ Tdata.k_ml }} </td>
         <td> {{ Tdata.H_cs }} </td>
         <td> {{ Tdata.H_ci }} </td>
+        <td> {{ Tdata.H_ml }}</td>
       </tr>
     </table>
     <table>
       <tr>
-        <th>H(ml)</th>
-        <th>kpa</th>
+        <th>delta</th>
         <th>Tp</th>
-        <th>GA</th>
+        <th>G</th>
+        <th>kpa</th>
         <th>V</th>
-        <th>b</th>
         <th>dip</th>
+        <th>b</th>
+        <th>t</th>
         <th>d2</th>
-        <th>D.rad</th>
       </tr>
       <tr>
-        <td> {{ Tdata.H_ml }}</td>
-        <td> {{ Tdata.kpa }}  </td>
-        <td> {{ Tdata.T_p }} </td>
-        <td> {{ Tdata.G_a }} </td>
+        <td> {{ Tdata.delta }} </td>
+        <td> {{ Tdata.Tp }} </td>
+        <td> {{ Tdata.G }} </td>
+        <td> {{ Tdata.kappa }}  </td>
         <td> {{ Tdata.V }} </td>
-        <td> {{ Tdata.b }} </td>
         <td> {{ Tdata.dip }} </td>
-        <td> {{ Tdata.D2 }}</td>
-        <td> {{ Tdata.d_rad }} </td>
+        <td> {{ Tdata.b }} </td>
+        <td> {{ Tdata.t }} </td>
+        <td> {{ Tdata.D }}</td>
       </tr>
     </table>
     <table>
@@ -163,7 +167,7 @@
         <td> {{ Mdata.Bs_c }} </td>
         <td> {{ Mdata.e }} </td>
         <td> {{ Mdata.R }} </td>
-        <td> {{ Mdata.mx_s }} </td>
+        <td> {{ Mdata.s_max }} </td>
         <td> {{ Mdata.Cs }} </td>
         <td> {{ Mdata.Ci }} </td>
         <td> {{ Mdata.Ml }} </td>

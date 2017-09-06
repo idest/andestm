@@ -3,13 +3,20 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-
+import pickle
 #from .compute import compute
 
 from .forms import ThermalInputForm, MechanicalInputForm
 from .models import ThermalInput, MechanicalInput
 
 import time
+
+def save_obj(obj, name):
+    with open(name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, 0)
+def load_obj(obj,name):
+    with open(name + '.pkl', 'rb') as f:
+        pickle.load(f)
 
 def index(request):
     if request.method == 'POST':
@@ -20,7 +27,9 @@ def index(request):
             data = request.POST
             Tdata = TForm.cleaned_data
             Mdata = MForm.cleaned_data
+            #save_obj(Tdata, 'Tdata')
             context = {'data': data, 'Tdata': Tdata, 'Mdata': Mdata}
+
             #time.sleep(10)
             return render(request, 'maker/data.html', context)
             #Tdata = TForm.cleaned_data

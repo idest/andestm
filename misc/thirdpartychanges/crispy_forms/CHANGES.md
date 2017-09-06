@@ -76,3 +76,46 @@ For this segment:
             {% if crispy_appended_text %}<span class="input-group-addon{% if active %} active{% endif %}{% if input_size %} {{ input_size }}{% endif %}">{% if append_label_suffix %} {{ field.field.label_suffix|safe }} {% else %} {{ crispy_appended_text|safe }} {% endif %}</span>{% endif %}
         </div>
     {% endif %}
+
+####In crispy_forms/templates/bootstrap3/layout/help_text_and_errors.html
+
+I replaced this original segment:
+
+    {% if help_text_inline and not error_text_inline %}
+        {% include 'bootstrap3/layout/help_text.html' %}
+    {% endif %}
+
+    {% if error_text_inline %}
+        {% include 'bootstrap3/layout/field_errors.html' %}
+    {% else %}
+        {% include 'bootstrap3/layout/field_errors_block.html' %}
+    {% endif %}
+
+    {% if not help_text_inline %}
+        {% include 'bootstrap3/layout/help_text.html' %}
+    {% endif %}
+
+For this segment:
+
+    {% if help_and_error %}
+        {% include 'bootstrap3/layout/help_text.html' %}
+        {% if form_show_errors and field.errors %}
+            {% for error in field.errors %}
+                <span id="error_{{ forloop.counter }}_{{ field.auto_id }}" class="error-block"><strong>{{ error }}</strong></span>
+            {% endfor %}
+        {% endif %}
+    {% else %}
+        {% if help_text_inline and not error_text_inline %}
+            {% include 'bootstrap3/layout/help_text.html' %}
+        {% endif %}
+
+        {% if error_text_inline %}
+            {% include 'bootstrap3/layout/field_errors.html' %}
+        {% else %}
+            {% include 'bootstrap3/layout/field_errors_block.html' %}
+        {% endif %}
+
+        {% if not help_text_inline %}
+            {% include 'bootstrap3/layout/help_text.html' %}
+        {% endif %}
+    {% endif %}

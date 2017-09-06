@@ -46,7 +46,7 @@ class ThermalInputForm(forms.ModelForm):
                              exponencial de la producción de calor \
                              radiogénico',
                              widget=forms.NumberInput(attrs={'step':'1'}),
-                             min_value=0, max_value=5)
+                             min_value=1, max_value=30)
     Tp = forms.FloatField(label='Tm',label_suffix='ºC',
                           help_text='Temperatura potencial del manto \
                           astenosférico en la superficie',
@@ -90,9 +90,11 @@ class ThermalInputForm(forms.ModelForm):
         self.helper.disable_csrf = True
         self.helper.label_class = 'col-md-4'
         self.helper.field_class = 'col-md-8'
+        #self.form_show_errors = False
         #Custom attributes
         self.helper.label_info = True
         self.helper.append_label_suffix = True
+        self.helper.help_and_error = True
         self.helper.layout = Layout(
             Div(
                 Div(HTML("""<h3 class="title">Variables Termales</h3>""")),

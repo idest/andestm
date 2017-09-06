@@ -2,6 +2,7 @@
 
 from django.db import models
 
+
 class GeometricModel(models.Model):
     """
     Modelo inicial que caracteriza la estructura geometrica de la litosfera
@@ -103,6 +104,7 @@ class ThermalInput(models.Model):
     delta = models.FloatField("δ",
         help_text="Factor de escala para el decaimiento exponencial de la \
         producción de calor radiogénico (km)")
+        #validators=[MaxValueValidator(100), MinValueValidator(1)])
     Tp = models.FloatField("Tm",
         help_text="Temperatura potencial del manto astenosférico en la \
         superficie (ºC)")

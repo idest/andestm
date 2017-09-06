@@ -6,10 +6,24 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import math
 from pyevtk.hl import imageToVTK
+import pickle
 
 #data = np.loadtxt('/Users/inigo/projects/andestm-web/media/data/Modelo.dat')
-data = np.loadtxt('/home/idest/projects/andestm/media/data/Modelo.dat')
-ta = np.loadtxt('/home/idest/projects/andestm/media/data/PuntosFosaEdad.dat')
+data = np.loadtxt('/home/idest/projects/andestm/media/data/Model.dat')
+tadata = np.loadtxt('/home/idest/projects/andestm/media/data/TrenchAge.dat')
+
+def save_obj(obj, name):
+    with open(name + '.pkl', 'wb') as f:
+        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+def load_obj(name):
+    with open(name + '.pkl', 'rb') as f:
+        return pickle.load(f)
+
+class dotdict(dict):
+    # dot.notation access to dictionary attributes"
+    __getattr__ = dict.get
+    __setattr__ = dict.__setitem__
+    __delattr__ = dict.__delitem__
 
 class Data(object):
     def __init__(self,data,xystep,zstep):
@@ -117,24 +131,25 @@ class GeometricModel(Model3D):
         self.z_icd = self.__setBoundary(self.data.getData()[:, 4])
         self.z_topo = self.__setBoundary(self.data.getData()[:, 5])
         self.geomodel3D = self.__set3DGeoModel()
-        self.slablabdepth = self.__setSlabLabDepth()
-        self.slablabarea = self.__setSlabLabArea()
+        self.slablabint_depth = self.__setSlabLabIntDepth()
+        self.slablabint_topo = self.__setSlabLabIntTopo()
+        self.slablabint_area = self.__setSlabLabIntArea()
         #self.GModel3D = self.__set3DGModel()
     def __setBoundary(self, depthData):
-        return self.data.reshape2DData(depthData)
+        return self.data.reshape2DData(depthData)[:, :, np.newaxis]
     def __set3DGeoModel(self):
-        boundaries = [self.z_topo, self.z_icd, self.z_moho, self.z_sl]
+        boundaries = self.getBoundaries()
         z = self.data.get3DGrid()[2]
         geomodel3D = self.data.mask3DArray(np.empty(z.shape)*np.nan,
                                            nanfill=True)
         for n in range(len(boundaries)):
-            c = boundaries[n][:, :, np.newaxis]
+            c = boundaries[n]
             with np.errstate(invalid='ignore'): ### ?? ###
                 geomodel3D[z < c] = n + 1
         return geomodel3D
     def __setLayerThickness(self):
         pass
-    def __getSlabLabIndex(self):
+    def __getSlabLabIntIndex(self):
         # Gradients array
         g = np.gradient(self.z_sl, axis=0)
         # Min Gradient Indexes
@@ -143,55 +158,76 @@ class GeometricModel(Model3D):
         with np.errstate(invalid='ignore'):
             posg = g > -4e-01 # (... or where gradient gets very close to 0)
         # Ignore (mask) the values to the left of the minimum gradient
-        gmask = self.data.get2DIndexes()[0] < mingidx
+        i_idx = self.data.get2DIndexes()[0][:, :, np.newaxis]
+        gmask = i_idx < mingidx
         maskedposg = np.ma.array(posg, mask=gmask)
         # Get index of first positive gradient (Slab/Lab idx)
-        slablabidx = np.argmax(maskedposg, axis=0)
+        sli_idx = np.argmax(maskedposg, axis=0)
         # Get visual boolean representation of slablabidx
         # Z = np.zeros(g.shape)
         # Z[slablabidx, self.data.get2DIndexes()[1][0]] = 1
         # return Z.T
-        return slablabidx
-    def __setSlabLabDepth(self):
-        jidxs = self.data.get2DIndexes()[1][0]
-        slablabdepth = self.z_sl[self.__getSlabLabIndex(), jidxs]
-        return slablabdepth
-    def __setSlabLabArea(self):
-        slablabarea = np.zeros(self.data.get2DShape())
-        slablabarea[self.data.get2DIndexes()[0] > self.__getSlabLabIndex()] = 1
-        return slablabarea
+        return sli_idx
+    def __setSlabLabIntDepth(self):
+        sli_idx = self.__getSlabLabIntIndex()
+        j_idx = self.data.get2DIndexes()[1][0]
+        sli_depth = self.z_sl[sli_idx, j_idx]
+        return sli_depth[np.newaxis, :, np.newaxis]
+    def __setSlabLabIntTopo(self):
+        sli_idx = self.__getSlabLabIntIndex()
+        j_idx = self.data.get2DIndexes()[1][0]
+        sli_topo = self.z_topo[sli_idx, j_idx]
+        return sli_topo[np.newaxis, :, np.newaxis]
+    def __setSlabLabIntArea(self):
+        sli_idx = self.__getSlabLabIntIndex()
+        i_idx = self.data.get2DIndexes()[0][:, :, np.newaxis]
+        sli_area = np.zeros(self.data.get2DShape())[:, :, np.newaxis]
+        sli_area[ i_idx > sli_idx] = 1
+        return sli_area
+    def __maskSlabLab(self, array3D, area):
+        sli_area = self.slablabint_area
+        lab_mask = sli_area == area
+        lab_mask3D = np.zeros(self.data.get3DShape(), dtype=bool)
+        lab_mask3D[:, :, :] = lab_mask
+        masked_array = np.ma.array(array3D, mask=lab_mask3D)
+        return masked_array
     def get3DGeoModel(self):
         return self.geomodel3D
     def getBoundaries(self):
         return [self.z_topo, self.z_icd, self.z_moho, self.z_sl]
-    def getSlabLabDepth(self):
-        return self.slablabdepth
-    def getSlabLabArea(self):
-        return self.slablabarea
+    def getSlabLabIntDepth(self):
+        return self.slablabint_depth
+    def getSlabLabIntTopo(self):
+        return self.slablabint_topo
+    def getSlabLabIntArea(self):
+        return self.slablabint_area
+    def maskSlab(self, array3D):
+        masked_array = self.__maskSlabLab(array3D, 0)
+        return masked_array
+    def maskLab(self, array3D):
+        masked_array = self.__maskSlabLab(array3D, 1)
+        return masked_array
 
-A = Data(data,0.2,1)
-#A.printdata("masked_data")
-#A1 = A.get3DGrid()[0]
-#print(A1.shape)
-#A2 = np.swapaxes(A1,0,1)
-#print(A2.shape)
-#A.printdata('topslicex3', A2[:,:,0])
-B = GeometricModel(A)
-C = B.get3DGeoModel()
-#A.printdata('slablabarea_4e01sa', B.getSlabLabArea().T, bool=True)
 
 class ThermalModel(Model3D):
     def __init__(self, geomodel, Tdata):
         self.geomodel = geomodel
-        self.tdata = Tdata
-        self.K = __setLayerProperty("K")
-        self.H = __setLayerProperty("H")
+        self.tdata = dotdict(Tdata)
+        self.k = self.__setLayerProperty("k")
+        self.H = self.__setLayerProperty("H")
+        self.slablabint_temp = self.__setSlabLabIntTemperature()
+        self.qzero = self.__setQZero()
+        self.S = self.__setS()
+        self.slablabint_sigma = self.__setSlabLabIntSigma()
+        self.slab_sigma = self.__setSlabSigma()
+        #self.slablab_temp = self.__setSlabLabTemp()
+
     def __setLayerProperty(self, prop):
         geomodel3D = self.geomodel.get3DGeoModel()
         boundaries = self.geomodel.getBoundaries()
-        if prop == "K":
-            propv = [self.tdata.K_cs, self.tdata.K_ci, self.tdata.K_ml]
-            propfz = self.tdata.K_z
+        if prop == "k":
+            propv = [self.tdata.k_cs, self.tdata.k_ci, self.tdata.k_ml]
+            propfz = self.tdata.k_z
         elif prop == "H":
             propv = [self.tdata.H_cs, self.tdata.H_ci, self.tdata.H_ml]
             propfz = self.tdata.H_z
@@ -208,67 +244,117 @@ class ThermalModel(Model3D):
                 Rh.append(propv[n]*h[n])
             R = (Rh.sum()/h.sum())[:,:,np.newaxis]
         return R
-    def __setDelta(self):
+    def __getDelta(self):
         ### Work needs to be done here ###
         boundaries = self.geomodel.getBoundaries()
-        if self.tdata.d_rad == 0:
+        if self.tdata.delta_icd is True:
             delta = boundaries[0] - boundaries[1]
         else:
-            delta = d_rad
+            delta = self.tdata.delta
     def __getTrenchAge(self):
-        if EF_lat is True:
-            trenchage = ta[1]
+        if self.tdata.t_lat is True:
+            trench_age = tadata[:, 1][np.newaxis, :, np.newaxis]
         else:
-            trenchage = self.tdata.EF
-    def __getQZero(self):
-        qzero = (self.K * self.tdata.T_p)/np.sqrt(np.pi * self.tdata.kpa *
-                                                  self.__getTrenchAge())
+            trench_age = self.tdata.t
+        return trench_age
+    def __setSlabLabIntTemperature(self):
+        sli_depth = self.geomodel.getSlabLabIntDepth()
+        Tp = self.tdata.Tp
+        G = self.tdata.G
+        sli_temp = Tp + G * sli_depth
+        return sli_temp
+    def __setQZero(self):
+        k = self.geomodel.maskLab(self.k)
+        Tp = self.tdata.Tp
+        kappa = self.tdata.kappa
+        age = self.__getTrenchAge()
+        print("k", k)
+        print("Tp", Tp)
+        print("kappa", kappa)
+        print("t", age)
+        qzero = (k * Tp)/np.sqrt(np.pi * kappa * age)
         return qzero
-    def __getS(self):
-        slablabdepth = self.geomodel.getSlabLabDepth()
-        topo = self.geomodel.getBoundaries()[0]
-        s = 1 + self.tdata.b * np.sqrt(slablabdepth - topo) * self.tdata.V *
-            abs(np.sin(self.tdata.dip) / self.tdata.kpa)
-        return s
-    def __getSlabLabTemp(self):
-        slablabdepth = self.geomodel.getSlabLabDepth()
-        slablabtemp = self.tdata.T_p + self.tdata.G_a * slablabdepth
-        return slablabtemp
-    def __getSigmaMax(self):
-        slablabtemp = self.__getSlabLabTemp()
-        slablabdepth = self.geomodel.getSlabLabDepth()
-        topo = self.geomodel.getBoundaries()[0]
-        sigmamax = (slablabtemp / (slablabdepth - slablabtemp) /
-                   (self.tdata.V * self.tdata.__getS() * self.K) -
-                   self.__getQZero() * self.tdata.kpa)
-        return sigmamax
-    def __getMu(self):
-        mu = self.__getSigmaMax() / 1 - np.exp(self.tdata.D2)
-        return mu
-    def __getSigma(self):
-        mu = self.__getMu()
-        slablab = self.geomodel.getBoundaries()[3]
-        topo = self.geomodel.getBoundaries()[0]
-        slablabdepth = self.geomodel.getSlabLabDepth()
-        sigma = mu * (1 - np.exp((slablab - topo)*self.tdata.D2 /
-                      (slablabdepth - topo)))
-        return sigma
+    def __setS(self):
+        sli_depth = self.geomodel.getSlabLabIntDepth()
+        sli_topo = self.geomodel.getSlabLabIntTopo()
+        kappa = self.tdata.kappa
+        V = self.tdata.V
+        dip = self.tdata.dip
+        b = self.tdata.b
+        S = 1 + b * np.sqrt((sli_depth-sli_topo) * V * abs(np.sin(dip))/kappa)
+        return S
+    def __setSlabLabIntSigma(self):
+        sli_temp = self.slablabint_temp
+        sli_depth = self.geomodel.getSlabLabIntDepth()
+        sli_topo = self.geomodel.getSlabLabIntTopo()
+        k = self.geomodel.maskLab(self.k)
+        kappa = self.tdata.kappa
+        V = self.tdata.V
+        qzero = self.qzero
+        S = self.S
+        sli_sigma = (sli_temp * S * k)/(V * (sli_depth-sli_topo)) - qzero/V
+        return sli_sigma
+    def __setSlabSigma(self):
+        sli_sigma = self.slablabint_sigma
+        print(sli_sigma.shape)
+        sli_depth = self.geomodel.getSlabLabIntDepth()
+        print(sli_depth.shape)
+        sli_topo = self.geomodel.getSlabLabIntTopo()
+        print(sli_topo.shape)
+        z_sl = self.geomodel.getBoundaries()[3]
+        z_topo = self.geomodel.getBoundaries()[0]
+        D = self.tdata.D
+        mu = sli_sigma / (1-np.exp(D))
+        exp2 = (z_sl-z_topo)*D/(sli_depth-sli_topo)
+        print(exp2.dtype)
+        print(exp2.shape)
+        exp = np.ones(self.geomodel.data.get2DShape())*1.03
+        print(exp.dtype)
+        print(exp.shape)
+        self.geomodel.data.printdata('exp_slab_sigma', exp2)
+        #slab_sigma = mu * (1 - np.exp((z_sl-z_topo)*D/(sli_depth-sli_topo)))
+        #return slab_sigma
     def __getSlabTemp(self):
-        qzero = self.__getQZero()
-        sigma = self.__getSigma()
-        labslab = self.geomodel.getBoundaries()[3]
-        topo = self.geomodel.getBoundaries()[0]
-        s = self.__getS()
-        K = self.K
-        slabtemp = (qzero + sigma * self.tdata.V) * (labslab - topo) / (s * K)
-        return slabtemp
+        sli_depth = self.geomodel.getSlabLabIntDepth()
+        sli_topo = self.geomodel.getSlabLabIntTopo()
+        k = self.geomodel.maskLab(self.k)
+        V = self.tdata.V
+        qzero = self.qzero
+        S = self.S
+        slab_sigma = self.slab_sigma
+        slab_temp = (qzero + slab_sigma * V) * (sli_depth-sli_topo) / (k * S)
+        return slab_temp
     def __getLabTemp(self):
-        labslab = self.geomodel.getBoundaries()[3]
-        labtemp = self.tdata.T_p + self.tdata.G_a * labslab
-        return labtemp
+        z_sl = self.geomodel.getBoundaries()[3]
+        z_lab = self.geomodel.maskSlab(z_sl)
+        Tp = self.tdata.Tp
+        G = self.tdata.G
+        lab_temp = Tp + G * z_lab
+        return lab_temp
+    def __setSlabLabTemp(self):
+        slab_temp = self.__getSlabTemp().filled(0)
+        lab_temp = self.__getLabTemp().filled(0)
+        slablab_temp = np.zeros(self.data.get3DShape())
+        slablab_temp[slab_temp != 0] = slab_temp[slab_temp != 0]
+        slablab_temp[lab_temp != 0] = lab_temp[lab_temp != 0]
+        return slablab_temp
         ###WORk IN PROGRESS###
 
 
+
+A = Data(data,0.2,1)
+#A.printdata("masked_data")
+#A1 = A.get3DGrid()[0]
+#print(A1.shape)
+#A2 = np.swapaxes(A1,0,1)
+#print(A2.shape)
+#A.printdata('topslicex3', A2[:,:,0])
+B = GeometricModel(A)
+C = B.get3DGeoModel()
+Tdata = load_obj('Tdata')
+print('helo', Tdata)
+D = ThermalModel(B, Tdata)
+#A.printdata('slablabarea_4e01sa', B.getSlabLabArea().T, bool=True)
 
 # for n in np.arange(1000, 4200, 20):
 #     if n == 1000:
