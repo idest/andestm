@@ -5,7 +5,7 @@ import vtk
 ###############################################################################
 
 reader = vtk.vtkXMLImageDataReader()
-reader.SetFileName("block.vti")
+reader.SetFileName("vtk_files/geotherm.vti")
 reader.Update()
 
 print reader.GetOutput()

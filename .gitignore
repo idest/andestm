@@ -3,6 +3,7 @@ __pycache__
 node_modules
 webpack-stats.json
 package-lock.json
+andestm/development_settings.py
 misc/old_code
 misc/prints
 misc/vtk_files
@@ -10,3 +11,4 @@ misc/modelotermal.pdf
 misc/data
 databasebkp/
 mediabkp/
+*.vti

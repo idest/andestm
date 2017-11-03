@@ -3,7 +3,7 @@
 from django.db import models
 
 
-class GeometricModel(models.Model):
+class GeometricData(models.Model):
     """
     Modelo inicial que caracteriza la estructura geometrica de la litosfera
     por medio de la determinacion de la profundidad de cuatro fronteras
